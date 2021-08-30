@@ -88,6 +88,7 @@ all_features = pd.get_dummies(all_features, dummy_na=True)
 all_features.shape
 
 n_train = train_data.shape[0]
+print(n_train)
 train_features = torch.tensor(
     all_features[:n_train].values, dtype=torch.float32)
 test_features = torch.tensor(
