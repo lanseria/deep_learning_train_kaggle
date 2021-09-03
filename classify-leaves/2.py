@@ -82,17 +82,22 @@ def set_train_csv_number():
 # print(test_id)
 # set_train_csv_number()
 
-csv_fname = os.path.join("data", DATA_DIR_NAME, 'train_number.csv')
-train_df = pd.read_csv(csv_fname)
-sfolder = StratifiedKFold(n_splits=FOLD, random_state=SEED, shuffle=True)
-tr_folds = []
-val_folds = []
-for train_idx, val_idx in sfolder.split(train_df.image, train_df.label):
-    tr_folds.append(train_idx)
-    val_folds.append(val_idx)
-    print(train_idx, val_idx)
+csv_fname = os.path.join("data", DATA_DIR_NAME, 'train.csv')
+train_df = pd.read_csv(csv_fname, header=None)
+print(train_df)
+print(train_df.index)
+for i in train_df.index:
+    print(i)
+    break
+# sfolder = StratifiedKFold(n_splits=FOLD, random_state=SEED, shuffle=True)
+# tr_folds = []
+# val_folds = []
+# for train_idx, val_idx in sfolder.split(train_df.image, train_df.label):
+#     tr_folds.append(train_idx)
+#     val_folds.append(val_idx)
+#     print(train_idx, val_idx)
 
-train_iter = torch.utils.data.DataLoader(datasets.ImageFolder(
-    os.path.join("data", DATA_DIR_NAME, 'images')), batch_size=BATCH_SIZE, shuffle=True)
+# train_iter = torch.utils.data.DataLoader(datasets.ImageFolder(
+#     os.path.join("data", DATA_DIR_NAME, 'images')), batch_size=BATCH_SIZE, shuffle=True)
 
-print(train_iter)
+# print(train_iter)
