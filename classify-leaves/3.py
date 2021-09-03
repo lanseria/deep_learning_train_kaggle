@@ -157,48 +157,25 @@ class LeavesData(Dataset):
         return self.real_len
 
 
-def run_dataset():
-    train_dataset = LeavesData(TRAIN_CSV_PATH, IMG_PATH, mode='train')
-    val_dataset = LeavesData(TRAIN_CSV_PATH, IMG_PATH, mode='valid')
-    test_dataset = LeavesData(TEST_CSV_PATH, IMG_PATH, mode='test')
-    # print(train_dataset)
-    # print(val_dataset)
-    # print(test_dataset)
-    # img, lab = train_dataset[0]
-    # print(img.shape, lab)
-    # print(val_dataset[0])
-    # print(test_dataset[0])
-
-    # print(len(train_dataset))
-    # print(len(val_dataset))
-    # print(len(test_dataset))
-
-    train_loader = torch.utils.data.DataLoader(
-        dataset=train_dataset,
+def run_dataset(mode='train'):
+    if mode == 'train':
+        dataset = LeavesData(TRAIN_CSV_PATH, IMG_PATH, mode='train')
+    elif mode == 'valid':
+        dataset = LeavesData(TRAIN_CSV_PATH, IMG_PATH, mode='valid')
+    elif mode == 'test':
+        dataset = LeavesData(TEST_CSV_PATH, IMG_PATH, mode='test')
+    return torch.utils.data.DataLoader(
+        dataset=dataset,
         batch_size=8,
-        shuffle=False,
-        num_workers=5
+        shuffle=False
     )
-    val_loader = torch.utils.data.DataLoader(
-        dataset=val_dataset,
-        batch_size=8,
-        shuffle=False,
-        num_workers=5
-    )
-    test_loader = torch.utils.data.DataLoader(
-        dataset=test_dataset,
-        batch_size=8,
-        shuffle=False,
-        num_workers=5
-    )
-    return train_loader, val_loader, test_loader
 
 
 # 给大家展示一下数据长啥样
 
 def im_convert(tensor):
     """ 展示数据"""
-    image = tensor.to("cpu").clone().detach()
+    image = tensor.clone().detach()
     image = image.numpy().squeeze()
     image = image.transpose(1, 2, 0)
     image = image.clip(0, 1)
@@ -206,8 +183,7 @@ def im_convert(tensor):
     return image
 
 
-if __name__ == '__main__':
-    train_loader, val_loader, test_loader = run_dataset()
+def show_8_imgs(val_loader):
     fig = plt.figure(figsize=(20, 12))
     columns = 4
     rows = 2
@@ -218,6 +194,24 @@ if __name__ == '__main__':
     for idx in range(columns*rows):
         ax = fig.add_subplot(rows, columns, idx+1, xticks=[], yticks=[])
         ax.set_title(num_to_class[int(classes[idx])])
+        print(inputs[idx].shape)
         plt.imshow(im_convert(inputs[idx]))
 
     plt.show()
+
+# 看一下是在cpu还是GPU上
+
+
+def get_device():
+    return 'cuda' if torch.cuda.is_available() else 'cpu'
+
+
+if __name__ == '__main__':
+    # train_loader = run_dataset('train')
+    # val_loader = run_dataset('valid')
+    # test_loader = run_dataset('test')
+    # print(val_loader)
+    # show_8_imgs(val_loader)
+
+    device = get_device()
+    print(device)
