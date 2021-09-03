@@ -1,0 +1,1 @@
+from .NextVLAD import NeXtVLAD
